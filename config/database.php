@@ -93,6 +93,19 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'testing_db' => [
+            'driver' => 'mysql',
+            'host' => env('TEST_DB_HOST', 'lead_control_mariadb'),
+            'database' => env('TEST_DB_DATABASE', 'laravel_testing'),
+            'username' => env('TEST_DB_USERNAME', 'root'),
+            'password' => env('TEST_DB_PASSWORD', 'qweasd123'),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+        ],
+
+
     ],
 
     /*
