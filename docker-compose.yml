@@ -1,0 +1,65 @@
+version: "3.7"
+
+services:
+    nginx:
+        container_name: lead_control_nginx
+        build:
+            context: ./docker/nginx
+            dockerfile: Dockerfile
+        ports:
+            - "8080:80"
+        volumes:
+            - ./:/var/www
+        links:
+            - app
+        networks:
+            - shared_network
+
+    app:
+        container_name: lead_control_app
+        restart: unless-stopped
+        build:
+            args:
+                user: sammy
+                uid: 1000
+            context: ./docker/app
+            dockerfile: Dockerfile
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+            - ./docker/app/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+            - ./.env:/var/www/.env
+        depends_on:
+            - mariadb
+            - redis
+        networks:
+            - shared_network
+
+    redis:
+        container_name: lead_control_redis
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./docker/data/redis:/data
+        networks:
+            - shared_network
+
+    mariadb:
+        container_name: lead_control_mariadb
+        image: mariadb:10.2
+        environment:
+            MYSQL_ROOT_PASSWORD: qweasd123
+            MYSQL_DATABASE: lead_control
+            MYSQL_USER: root
+            MYSQL_PASSWORD: 123456
+        volumes:
+            - ./docker/data/mariadb:/var/lib/mysql
+        ports:
+            - "3307:3306"
+        networks:
+            - shared_network
+
+networks:
+    shared_network:
+        driver: bridge
