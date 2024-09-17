@@ -1,66 +1,83 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Guía de Configuración del Proyecto
 
-## About Laravel
+Este documento proporciona una guía paso a paso para levantar y configurar el proyecto en tu máquina local. Asegúrate de tener [Docker](https://www.docker.com/) y [Make](https://www.gnu.org/software/make/) instalados en tu sistema antes de comenzar.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Pasos para Levantar el Proyecto
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sigue estos pasos en el orden indicado para levantar el proyecto:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Construir las imágenes de Docker
 
-## Learning Laravel
+Ejecuta el siguiente comando para construir las imágenes de Docker necesarias para el proyecto:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Antes de comenzar, asegúrate de copiar los valores del archivo .env.example a tu archivo .env.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+make build
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. Iniciar los contenedores
+Levanta los contenedores en modo desatendido (background):
+make up
 
-## Laravel Sponsors
+ 3. Instalar las dependencias de Composer
+Instala las dependencias de Composer dentro del contenedor app:
+make composer-install
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### Premium Partners
+ 4. Generar la clave de aplicación de Laravel
+Genera la clave de aplicación de Laravel dentro del contenedor app:
+make key-generate
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+5. Generar la clave secreta JWT dentro del contenedor app, para poder crear un JWT valido dentro de la app. Se esa utilizando el paquete  tymon/jwt-auth 
 
-## Contributing
+make jwt-secret
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+6. Ejecutar las migraciones de la base de datos principal
+Ejecuta las migraciones de Laravel en la base de datos principal dentro del contenedor app:
+make migrate
 
-## Code of Conduct
+7. Limpiar caché y configuración
+Limpia y vuelve a cachear la configuración de Laravel dentro del contenedor app:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+make cache-clear
 
-## Security Vulnerabilities
+8. Crear la base de datos de prueba
+Crea la base de datos de prueba dentro del contenedor mariadb:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+make create-testing-db
 
-## License
+9. Limpiar caché y configuración nuevamente
+Limpia y vuelve a cachear la configuración de Laravel dentro del contenedor app:
+make cache-clear
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+10. Ejecutar migraciones en la base de datos de prueba
+Ejecuta las migraciones en la base de datos de pruebas dentro del contenedor app:
+make migrate-testing-db
+
+11. Limpiar caché y configuración una vez más
+Limpia y vuelve a cachear la configuración de Laravel dentro del contenedor app:
+make cache-clear
+
+12. Ejecutar todos los tests de PHPUnit
+Ejecuta todos los tests de PHPUnit dentro del contenedor app para verificar el estado de la aplicación:
+make test
+
+Notas Adicionales
+Asegúrate de que Docker y Make estén instalados en tu sistema.
+
+Si encuentras problemas de permisos, puedes necesitar usar sudo para algunos comandos de make.
+
+Revisa los logs de los contenedores para solucionar problemas específicos:
+
+make logs
+Para limpiar los datos de los volúmenes y reiniciar desde cero, utiliza el objetivo clean del Makefile:
+
+make clean
+
+Nota: Este comando eliminará los datos de las bases de datos y volúmenes asociados. Asegúrate de que esto es lo que deseas antes de ejecutarlo.
+
+
+
+
+
