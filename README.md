@@ -37,29 +37,32 @@ make jwt-secret
 Ejecuta las migraciones de Laravel en la base de datos principal dentro del contenedor app:
 make migrate
 
-7. Limpiar caché y configuración
+7. Ejecutar seeder para cargar datos en la base de datos
+make db-seed-user-role-permission
+
+8. Limpiar caché y configuración
 Limpia y vuelve a cachear la configuración de Laravel dentro del contenedor app:
 
 make cache-clear
 
-8. Crear la base de datos de prueba
+9. Crear la base de datos de prueba
 Crea la base de datos de prueba dentro del contenedor mariadb:
 
 make create-testing-db
 
-9. Limpiar caché y configuración nuevamente
+10. Limpiar caché y configuración nuevamente
 Limpia y vuelve a cachear la configuración de Laravel dentro del contenedor app:
 make cache-clear
 
-10. Ejecutar migraciones en la base de datos de prueba
+11. Ejecutar migraciones en la base de datos de prueba
 Ejecuta las migraciones en la base de datos de pruebas dentro del contenedor app:
 make migrate-testing-db
 
-11. Limpiar caché y configuración una vez más
+12. Limpiar caché y configuración una vez más
 Limpia y vuelve a cachear la configuración de Laravel dentro del contenedor app:
 make cache-clear
 
-12. Ejecutar todos los tests de PHPUnit
+13. Ejecutar todos los tests de PHPUnit
 Ejecuta todos los tests de PHPUnit dentro del contenedor app para verificar el estado de la aplicación:
 make test
 
