@@ -75,3 +75,7 @@ test:
 # Generar la clave secreta JWT dentro del contenedor app
 jwt-secret:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) exec app php artisan jwt:secret
+
+# Ejecutar el seeder UserRolePermissionSeeder dentro del contenedor app
+db-seed-user-role-permission:
+	docker-compose -f $(DOCKER_COMPOSE_FILE) exec app php artisan db:seed --class=UserRolePermissionSeeder
